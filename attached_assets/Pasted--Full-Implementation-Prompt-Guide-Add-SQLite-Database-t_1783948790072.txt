@@ -1,0 +1,95 @@
+✅ Full Implementation Prompt / Guide: Add SQLite Database to the Printify Printing System
+
+Copy and use this complete prompt with an AI coding assistant (like Grok, Claude, Cursor, etc.), or follow it step-by-step yourself.
+
+Project Context
+You are working on the Printify / Printing System — a React 19 + TypeScript + Vite + Tailwind ERP for printing presses. Currently it uses Zustand + localStorage. I want to replace the in-memory/localStorage storage with SQLite as the persistent database.
+Goals
+
+    Use SQLite for all data (customers, inventory, vendors, bills, expenses, settings, etc.).
+    Keep the existing UI, components, types, and Zustand store structure as much as possible.
+    Prefer a lightweight, easy-to-deploy solution.
+    Support full CRUD operations with the same API surface as the current Zustand store.
+    Data must persist across browser refreshes and app restarts.
+    Keep it simple for a single-user desktop/web app (no complex auth for DB yet).
+
+Recommended Approach (Best for this project)
+
+Use Tauri (recommended) or SQLite WASM + absurd-sql / sql.js for browser-only.
+Preferred: Add a lightweight Node.js/Express backend with better-sqlite3 (easiest to maintain and most reliable).
+Detailed Implementation Steps
+Option 1: Backend + SQLite (Recommended – Most Robust)
+
+    Create Backend
+        Create a new folder backend/ in the root.
+        Initialize: cd backend && npm init -y && npm install express better-sqlite3 cors dotenv zod
+        Add TypeScript: npm install -D typescript ts-node @types/express @types/cors @types/node
+    Database Setup (backend/db.ts)
+
+    import Database from 'better-sqlite3';
+    import { join } from 'path';
+
+    const dbPath = join(__dirname, '../data/printing.db');
+    export const db = new Database(dbPath);
+
+    // Create all tables (customers, inventory, vendors, bills, expenses, settings, etc.)
+    // Mirror the existing types from src/types/index.ts
+
+    API Routes
+        Create routes for all entities matching current store actions (addCustomer, updateBill, etc.).
+        Use Zod for validation on backend too.
+    Frontend Changes
+        Create src/services/api.ts with Axios or fetch wrappers.
+        Update src/contexts/store.ts to call API instead of direct state mutations.
+        Add loading & error states.
+    Development
+        Run backend on port 3001, frontend on 5173 (Vite default).
+        Add proxy in vite.config.ts.
+
+Option 2: Browser-only SQLite (No Backend)
+
+Use sqlite-wasm or absurd-sql + idb-keyval for persistence.
+
+Full Ready-to-Use Prompt (Copy-Paste)
+
+You are an expert full-stack React + TypeScript developer.
+
+Project: https://github.com/Binit-Pandey/Printify (Printing System ERP)
+
+Current architecture:
+- React 19 + Vite + TypeScript + Tailwind + Zustand + localStorage
+- All data in src/contexts/store.ts and mock-data
+- Types defined in src/types/index.ts
+
+Task: Replace localStorage with SQLite.
+
+Requirements:
+1. Choose the best approach for a desktop/web single-user app (prefer reliability and simplicity).
+2. Provide complete code for:
+   - Database schema (all tables matching existing types: Customer, InventoryItem, Vendor, Bill, Expense, CompanySettings, etc.)
+   - Backend API (if using backend) with CRUD for every entity
+   - Updated Zustand store that uses API calls
+   - Migration script from localStorage to SQLite
+   - Updated vite.config.ts + package.json scripts
+3. Keep UI 100% unchanged. Only change data layer.
+4. Include proper error handling, loading states, and TypeScript types.
+5. Provide instructions for running both frontend + backend.
+6. Add basic seeding from existing mock data.
+
+First, recommend the best stack (Tauri + SQLite, Node+Express+better-sqlite3, or pure browser SQLite WASM) and explain why.
+
+Then, output the complete file-by-file implementation.
+
+Quick Start Commands (After Implementation)
+
+Backend + Frontend:
+
+# Terminal 1 - Backend
+cd backend
+npm install
+npm run dev
+
+# Terminal 2 - Frontend
+npm install
+npm run dev
+
