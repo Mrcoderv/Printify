@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# SQLite WAL/SHM temp files (the .db itself is tracked)
+data/*.db-shm
+data/*.db-wal
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
